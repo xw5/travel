@@ -1,15 +1,28 @@
 <template>
   <ul class="list">
-    <li>A</li>
-    <li>A</li>
-    <li>A</li>
-    <li>A</li>
+    <li
+      class="item"
+      v-for="key of letters"
+      :key="key"
+    >{{key}}</li>
   </ul>
 </template>
 
 <script>
 export default {
-  name: 'CityAlphabet'
+  name: 'CityAlphabet',
+  props: {
+    cities: Object
+  },
+  computed: {
+    letters () {
+      const letters = []
+      for(var key in this.cities){
+        letters.push(key)
+      }
+      return letters
+    }
+  }
 }
 </script>
 
