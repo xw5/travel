@@ -1,14 +1,70 @@
 <template>
   <div>
     <div class="search">
-      <input class="search-input" type="text" placeholder="输入城市名或拼音" />
+      <input v-model="keyword" class="search-input" type="text" placeholder="输入城市名或拼音" />
+    </div>
+    <div
+      class="search-content"
+      ref="search"
+      v-show="keyword"
+    >
+      <ul>
+        <li
+          class="search-item border-bottom"
+          v-for="item of list"
+          :key="item.id"
+        >
+          {{item.name}}
+        </li>
+        <li class="search-item border-bottom" v-show="hasNoData">
+          没有找到匹配数据
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
+import Bscroll from 'better-scroll'
 export default {
-  name: 'CitySearch'
+  name: 'CitySearch',
+  props: {
+    cities: Object
+  },
+  data () {
+    return {
+      keyword: '',
+      list: [],
+      timer: 0
+    }
+  },
+  computed: {
+    hasNoData () {
+      return this.list.length === 0
+    }
+  },
+  watch: {
+    keyword (newVal, oldVal) {
+      var result = []
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+      this.timer = setTimeout(() => {
+        for (let key in this.cities) {
+          this.cities[key].forEach((item) => {
+            if (item.spell.indexOf(newVal) > -1 ||
+              item.name.indexOf(newVal) > -1) {
+              result.push(item)
+            }
+          })
+        }
+        this.list = result
+      }, 200)
+    }
+  },
+  mounted () {
+    this.scroll = new Bscroll(this.$refs.search)
+  }
 }
 </script>
 
