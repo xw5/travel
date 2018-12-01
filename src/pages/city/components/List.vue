@@ -53,6 +53,11 @@ export default {
   },
   mounted () {
     this.scroll = new BetterScroll(this.$refs.wrapper)
+  },
+  watch: {
+    letter (newVal, oldVal) {
+      this.scroll.scrollToElement(this.$refs[this.letter][0])
+    }
   }
 }
 </script>

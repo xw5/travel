@@ -1,9 +1,16 @@
 <template>
-  <ul class="list">
+  <ul
+    class="list"
+    @touchstart="touchstartFn"
+    @touchmove="touchmoveFn"
+    @touchend="touchendFn"
+  >
     <li
       class="item"
       v-for="key of letters"
       :key="key"
+      :ref="key"
+      @click="handleLetterClick"
     >{{key}}</li>
   </ul>
 </template>
@@ -14,6 +21,13 @@ export default {
   props: {
     cities: Object
   },
+  data () {
+    return {
+      hastouched: false,
+      letterOffset: null,
+      timer: 0
+    }
+  },
   computed: {
     letters () {
       const letters = []
@@ -21,6 +35,32 @@ export default {
         letters.push(key)
       }
       return letters
+    }
+  },
+  methods: {
+    handleLetterClick (e) {
+      this.$emit('change', e.target.innerText)
+    },
+    touchstartFn () {
+      this.hastouched = true
+      this.letterOffset = this.$refs['A'][0].getBoundingClientRect()
+    },
+    touchmoveFn (e) {
+      let index = 0
+      if (this.hastouched) {
+        if (this.timer) {
+          clearTimeout(this.timer)
+        }
+        this.timer = setTimeout(() => {
+          index = Math.floor((e.touches[0].clientY - this.letterOffset.top) / this.letterOffset.height)
+          if (index > 0 && index < this.letters.length) {
+            this.$emit('change', this.letters[index])
+          }
+        }, 16)
+      }
+    },
+    touchendFn () {
+      this.hastouched = false
     }
   }
 }
