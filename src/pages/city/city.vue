@@ -35,7 +35,6 @@ export default {
     },
     handGetCityInfoSucc (res) {
       var resData = res.data
-      console.log(resData)
       if (resData.ret && resData.data) {
         this.cities = resData.data.cities
         this.hotCities = resData.data.hotCities
