@@ -40,10 +40,10 @@ export default {
     this.getHomeInfo()
   },
   activated () {
-    if(this.lastCity != this.city){
-        this.lastCity = this.city
-        this.getHomeInfo()
-      }
+    if (this.lastCity !== this.city) {
+      this.lastCity = this.city
+      this.getHomeInfo()
+    }
   },
   computed: {
     ...mapState(['city'])
@@ -51,7 +51,7 @@ export default {
   methods: {
     getHomeInfo () {
       axios.get('/api/index.json?city=' + this.city)
-      .then(this.getHomeInforSuccess)
+        .then(this.getHomeInforSuccess)
     },
     getHomeInforSuccess (res) {
       var resData = res.data
